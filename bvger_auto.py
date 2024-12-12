@@ -1,3 +1,4 @@
+import datetime
 import sys
 import argparse
 import re
@@ -380,7 +381,7 @@ if __name__ == "__main__":
                         results[temp["id"]] = temp
 
         df = pd.DataFrame.from_dict(results, orient="index")
-        df.to_excel(os.path.join(download_folder, "results.xlsx"))
+        df.to_excel(os.path.join(download_folder, f"bvger_results_{datetime.datetime.now().strftime('%y-%m-%dT%H-%M-%S')}.xlsx"))
     else:
         parser.print_help(sys.stderr)
         exit(-1)
