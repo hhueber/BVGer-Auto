@@ -338,6 +338,7 @@ if __name__ == "__main__":
                 lang=query_lang,
                 full_text=full_text,
                 download=download,
+                download_folder=download_folder,
                 verbose=verbose,
             )
 
@@ -376,6 +377,7 @@ if __name__ == "__main__":
                             lang=query_lang,
                             full_text=full_text,
                             download=download,
+                            download_folder=download_folder,
                             verbose=verbose,
                         )
                         results[temp["id"]] = temp
