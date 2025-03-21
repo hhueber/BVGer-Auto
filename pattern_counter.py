@@ -73,8 +73,6 @@ def format_for_df(file):
 
     return patterns, len(res["patterns"]), patterns_total, words, len(res["words"]), words_total
 
-pprint(format_for_df(TEST_FILE_2))
-
 if __name__ == "__main__":
     print("start main")
     tqdm.pandas()
