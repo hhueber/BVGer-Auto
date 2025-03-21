@@ -19,6 +19,40 @@ del df["number_year"]
 # Set index
 df.set_index("id")
 
+# Reorder columns
+df = df[[
+    "id",
+    "link_page",
+    "query_lang",
+    "court",
+    "number",
+    "year",
+    "title",
+    "full_text",
+    "file_text",
+    "link_pdf",
+    "file_pdf",
+    "COUR",
+    "DATE DE LA DÉCISION",
+    "LANGUE",
+    "ATAF / AUTRES ARRÊTS",
+    "ATAF CITÉS",
+    "AUTRES ARRÊTS DU TAF CITÉS",
+    "MOTS-CLÉS RECONNUS",
+    "ANNÉE DE RÉCEPTION",
+    "DATE DE LA PUBLICATION",
+    "LÉGISLATION FÉDERALE",
+    "RECUEIL SYSTÉMATIQUE",
+    "RECUEIL OFFICIEL DU DROIT FÉDÉRAL",
+    "ATF CITÉS",
+    "AUTRES ARRÊTS DU TF CITÉS",
+    "FEUILLE FÉDÉRALE",
+    "AUTRES ARRÊTS DU TPF CITÉS",
+    "DÉCISION ATAF LIÉE",
+    "BULLETIN OFFICIEL",
+    "ARRÊTS DU RECUEIL OFFICIEL TPF CITÉS",
+]]
+
 # Save
 df.to_excel(os.path.join(path, "..", "all.xlsx"))
 
