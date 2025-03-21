@@ -62,18 +62,22 @@ def get_bvger_page(target: str, lang="de", full_text=False, download=False, down
     :param verbose: Debug.
     :return:
     """
-    driver = webdriver.Firefox(options=firefox_options)
-    endpoint = urljoin(BASE_URL, "/cache?guiLanguage={lang}&id={target}")
+    try:
+        driver = webdriver.Firefox(options=firefox_options)
+        endpoint = urljoin(BASE_URL, "/cache?guiLanguage={lang}&id={target}")
 
-    # Ensure that we only work with the target ID
-    if BASE_URL in target:
-        target = extract_bvger_cache_id(target)
+        # Ensure that we only work with the target ID
+        if BASE_URL in target:
+            target = extract_bvger_cache_id(target)
 
-    # Seek for the correct page
-    target_endpoint = endpoint.format(lang=lang, target=target)
-    if verbose:
-        print(f"> Testing {target_endpoint}")
-    driver.get(target_endpoint)
+        # Seek for the correct page
+        target_endpoint = endpoint.format(lang=lang, target=target)
+        if verbose:
+            print(f"> Testing {target_endpoint}")
+        driver.get(target_endpoint)
+    except Exception as e:
+        print(f"Error with Selenium: {e}")
+        return None
 
     try:
         # Wait for multiple elements to be present
@@ -105,50 +109,54 @@ def get_bvger_page(target: str, lang="de", full_text=False, download=False, down
         driver.quit()
 
     if soup:
-        result = {
-            "id": target,
-            "link_page": target_endpoint,
-            "query_lang": lang,
-        }
+        try:
+            result = {
+                "id": target,
+                "link_page": target_endpoint,
+                "query_lang": lang,
+            }
 
-        # Main content
-        content = soup.find(id="customContentSegment")
-        title = content.find(class_="ui header").text.split(" ")[1].strip()
-        result["title"] = title
-        result["full_text"] = None
-        result["file_text"] = None
-        if full_text:
-            text = "\n".join(t.text for t in content.find_all("p"))
+            # Main content
+            content = soup.find(id="customContentSegment")
+            title = content.find(class_="ui header").text.split(" ")[1].strip()
+            result["title"] = title
+            result["full_text"] = None
+            result["file_text"] = None
+            if full_text:
+                text = "\n".join(t.text for t in content.find_all("p"))
+                if download:
+                    filename = f"{title.replace('/', '-')}.txt"
+                    with open(os.path.join(download_folder, "txt", filename), "w") as f:
+                        f.write(text)
+                    result["file_text"] = filename
+                else:
+                    result["full_text"] = text
+            pdf = urljoin(BASE_URL, content.find("a", {"id": "idForTutorial"}, href=True)["href"])
+            result["link_pdf"] = pdf
+            result["file_pdf"] = None
             if download:
-                filename = f"{title.replace('/', '-')}.txt"
-                with open(os.path.join(download_folder, "txt", filename), "w") as f:
-                    f.write(text)
-                result["file_text"] = filename
-            else:
-                result["full_text"] = text
-        pdf = urljoin(BASE_URL, content.find("a", {"id": "idForTutorial"}, href=True)["href"])
-        result["link_pdf"] = pdf
-        result["file_pdf"] = None
-        if download:
-            filename = f"{title.replace('/', '-')}.pdf"
-            response = requests.get(pdf)
-            with open(os.path.join(download_folder, "pdf", filename), "wb") as f:
-                f.write(response.content)
+                filename = f"{title.replace('/', '-')}.pdf"
+                response = requests.get(pdf)
+                with open(os.path.join(download_folder, "pdf", filename), "wb") as f:
+                    f.write(response.content)
 
-            result["file_pdf"] = filename
+                result["file_pdf"] = filename
 
-        # Side menu
-        metadata = soup.find(id="sideMenuCacheViewAccordionComputer")
-        opts = metadata.find_all(class_="generalGridRowCacheView")
+            # Side menu
+            metadata = soup.find(id="sideMenuCacheViewAccordionComputer")
+            opts = metadata.find_all(class_="generalGridRowCacheView")
 
-        for opt in opts:
-            key = opt.find(class_="title").text.strip()
-            value = ";".join([label.text.strip() for label in opt.find_all(class_="label-wrapper")])
-            result[key] = value
+            for opt in opts:
+                key = opt.find(class_="title").text.strip()
+                value = ";".join([label.text.strip() for label in opt.find_all(class_="label-wrapper")])
+                result[key] = value
 
-        if verbose:
-            pprint(result)
-        return result
+            if verbose:
+                pprint(result)
+            return result
+        except Exception as e:
+            print(f"Error with {target}: {str(e)}")
+            return None
 
     return None
 
@@ -162,14 +170,18 @@ def get_bvger_search(target: str, lang="de", verbose=False) -> Optional[str]:
     :param verbose: Debug.
     :return: Link to the page if found, else None.
     """
-    driver = webdriver.Firefox(options=firefox_options)
-    endpoint = urljoin(BASE_URL, "/dashboard?guiLanguage={lang}&q=\"{target}\"")
+    try:
+        driver = webdriver.Firefox(options=firefox_options)
+        endpoint = urljoin(BASE_URL, "/dashboard?guiLanguage={lang}&q=\"{target}\"")
 
-    # Seek for the correct page
-    target_endpoint = endpoint.format(lang=lang, target=target)
-    if verbose:
-        print(f"> Testing {target_endpoint}")
-    driver.get(target_endpoint)
+        # Seek for the correct page
+        target_endpoint = endpoint.format(lang=lang, target=target)
+        if verbose:
+            print(f"> Testing {target_endpoint}")
+        driver.get(target_endpoint)
+    except Exception as e:
+        print(f"Error with Selenium: {e}")
+        return None
 
     try:
         # Wait for multiple elements to be present
@@ -186,29 +198,33 @@ def get_bvger_search(target: str, lang="de", verbose=False) -> Optional[str]:
         driver.quit()
 
     if soup:
-        # Get first scrollerItem
-        scroller_item = soup.find(id="scrollerItem")
+        try:
+            # Get first scrollerItem
+            scroller_item = soup.find(id="scrollerItem")
 
-        # Get title and check if match
-        title = scroller_item.find(class_="header").text
-        if verbose:
-            print("> Found: ", title)
-        if not target in title:
+            # Get title and check if match
+            title = scroller_item.find(class_="header").text
             if verbose:
-                print("> Target not corresponding!")
+                print("> Found: ", title)
+            if not target in title:
+                if verbose:
+                    print("> Target not corresponding!")
+                return None
+
+            links = scroller_item.find_all("a")
+            page = None
+            for link in links:
+                link_relative = link["href"]
+                if "cache" in link_relative:
+                    param = extract_bvger_cache_id(urljoin(BASE_URL, link_relative))
+                    page = urljoin(BASE_URL, f"cache?id={param}")
+
+            if verbose:
+                print(f"> Found page: {page}")
+            return page
+        except Exception as e:
+            print(f"Error with {target}: {str(e)}")
             return None
-
-        links = scroller_item.find_all("a")
-        page = None
-        for link in links:
-            link_relative = link["href"]
-            if "cache" in link_relative:
-                param = extract_bvger_cache_id(urljoin(BASE_URL, link_relative))
-                page = urljoin(BASE_URL, f"cache?id={param}")
-
-        if verbose:
-            print(f"> Found page: {page}")
-        return page
 
     return None
 
@@ -342,9 +358,12 @@ if __name__ == "__main__":
                 verbose=verbose,
             )
 
-            df = pd.DataFrame.from_dict(temp, orient="index")
-            df.to_excel(os.path.join(download_folder, f"{title.replace('/', '-')}.xlsx"))
-            sys.stdout.write(f"Found: `{title}`\n")
+            if temp:
+                df = pd.DataFrame.from_dict(temp, orient="index")
+                df.to_excel(os.path.join(download_folder, f"{title.replace('/', '-')}.xlsx"))
+                sys.stdout.write(f"Found: `{title}`\n")
+            else:
+                sys.stdout.write(f"Eror with `{title}`\n")
         else:
             sys.stdout.write(f"Not found: `{title}`\n")
     elif "courts" in args:
@@ -380,7 +399,8 @@ if __name__ == "__main__":
                             download_folder=download_folder,
                             verbose=verbose,
                         )
-                        results[temp["id"]] = temp
+                        if temp:
+                            results[temp["id"]] = temp
 
         df = pd.DataFrame.from_dict(results, orient="index")
         df.to_excel(os.path.join(download_folder, f"bvger_results_{datetime.datetime.now().strftime('%y-%m-%dT%H-%M-%S')}.xlsx"))
