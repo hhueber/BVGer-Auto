@@ -1,5 +1,6 @@
 .idea/
-download/
+download/*
+!download/.gitkeep
 env/
 patterns/*
 !patterns/.gitkeep
