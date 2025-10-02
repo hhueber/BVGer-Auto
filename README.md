@@ -5,7 +5,7 @@ Scrapping of the Swiss Federal Administrative Court jurisprudence database.
 ## Setup
 
 1. Clone the repo, cd into it.
-    - `git clone XXX; cd XXX`
+    - `git clone git@github.com:hhueber/BVGer-Auto.git; cd BVGer-Auto`
 2. Create virtual environment.
     - `python -m venv env; source env/bin/activate`
 3. Install requirements.
