@@ -296,7 +296,7 @@ if __name__ == "__main__":
                         help="Download the PDF. If `full_text` is True, the text is saved as a file as well",
                         action="store_true")
     parser.add_argument("-o", "--download-folder",
-                        help="Where the result will be saved",
+                        help="Where the result will be saved (default `./download`)",
                         default=BASE_DOWNLOAD_FOLDER)
     subparsers = parser.add_subparsers(help="`page` for a specific page, `collect` for multiple pages")
 

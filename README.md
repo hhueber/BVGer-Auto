@@ -46,6 +46,11 @@ options:
 Remember, be excellent to each others
 ```
 
+Notes :
+- L'option `-l` (`query-lang`) va déterminer le nom des en-têtes du tableau de résultats.
+- L'option `-v` (`verbose`) permet de "suivre" le scraper dans son "chemin".
+- L'option `-f` (`full-text`) va intégrer la totalité du texte de l'ATF dans le tableau des résultats si elle n'est pas utilisée avec l'option `-d` (`download`), ce qui va alourdir le fichier de résultats.
+
 #### Récupérer un ATF : `page`
 
 ```
