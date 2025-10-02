@@ -17,9 +17,9 @@ Scrapping of the Swiss Federal Administrative Court jurisprudence database.
 
 ## Usage
 
-### Récupérer un ou des ATF : `bvger_auto.py`
+### Récupérer un ou des arrêts : `bvger_auto.py`
 
-Ce script va parcourir le site https://bvger.weblaw.ch pour récupérer soit une liste d'ATF, soit un ATF précis.
+Ce script va parcourir le site https://bvger.weblaw.ch pour récupérer soit une liste d'arrêts, soit un arrêt précis.
 
 ```
 $ python bvger_auto.py --help
@@ -49,9 +49,9 @@ Remember, be excellent to each others
 Notes :
 - L'option `-l` (`query-lang`) va déterminer le nom des en-têtes du tableau de résultats.
 - L'option `-v` (`verbose`) permet de "suivre" le scraper dans son "chemin".
-- L'option `-f` (`full-text`) va intégrer la totalité du texte de l'ATF dans le tableau des résultats si elle n'est pas utilisée avec l'option `-d` (`download`), ce qui va alourdir le fichier de résultats.
+- L'option `-f` (`full-text`) va intégrer la totalité du texte de l'arrêt dans le tableau des résultats si elle n'est pas utilisée avec l'option `-d` (`download`), ce qui va alourdir le fichier de résultats.
 
-#### Récupérer un ATF : `page`
+#### Récupérer un arrêt : `page`
 
 ```
 $ python bvger_auto.py page --help
@@ -65,13 +65,13 @@ options:
   -h, --help  show this help message and exit
 ```
 
-Par exemple, pour récupérer les informations sur l'ATF "D-1234/2020", et sauvegarder le texte correspondant au format PDF :
+Par exemple, pour récupérer les informations sur l'arrêt "D-1234/2020", et sauvegarder le texte correspondant au format PDF :
 
 ```bash
 python bvger_auto.py -d page D-1234/2020
 ```
 
-#### Récupérer plusieurs ATF : `collect`
+#### Récupérer plusieurs arrêts : `collect`
 
 ```
 $ python bvger_auto.py collect --help
@@ -87,13 +87,13 @@ options:
   -h, --help  show this help message and exit
 ```
 
-Par exemple, pour récupérer les 20 premiers ATF numérotés (s'ils existent) de la Cour V (droit d'asile), de l'année 2025 :
+Par exemple, pour récupérer les 20 premiers arrêts numérotés (s'ils existent) de la Cour V (droit d'asile), de l'année 2025 :
 
 ```bash
 python bvger_auto.py -d collect E 2025 1-20
 ```
 
-Cette commande spécifique va télécharger les trois ATF numérotés entre 1 et 20 qui existent en 2025 pour cette cour spécifique, à savoir E-11/2025, E-15/2025 et E-18/2025.
+Cette commande spécifique va télécharger les trois arrêts numérotés entre 1 et 20 qui existent en 2025 pour cette cour spécifique, à savoir E-11/2025, E-15/2025 et E-18/2025.
 
 ### `merge.py`
 
