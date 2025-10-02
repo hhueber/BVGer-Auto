@@ -36,7 +36,7 @@ TEST_RANGE_YEARS = range(2023, 2024)
 # In reality, 51'822 hits
 # 3 secs wait top, so ~ 2 days
 MAX_COURTS = {"A", "B", "C", "D", "E", "F"}
-MAX_YEARS = range(2007, 2025)
+MAX_YEARS = range(2007, datetime.datetime.now().year + 1)
 MAX_NUMBERS = range(1, 10000)
 
 PATTERN = re.compile(r"^([A-F])\-([1-9]|[1-9]\d{1,3})\/(200[7-9]|201\d|202[0-4])$")
